@@ -43,6 +43,11 @@ async def submission(ack):
 # export SLACK_APP_TOKEN=xapp-***
 # export SLACK_BOT_TOKEN=xoxb-***
 
+@app.message("ping")
+async def ping(ack, say):
+    await ack()
+    await say("pong")
+
 @app.command("/meraki-orgs")
 async def cmd_organizations(ack, say, command, client, logger):
     await ack()
