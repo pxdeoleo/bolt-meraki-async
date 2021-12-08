@@ -4,13 +4,14 @@ logging.basicConfig(level=logging.INFO)
 
 import asyncio
 import os
+import re
 
 import meraki.aio
 from slack_bolt.adapter.socket_mode.async_handler import AsyncSocketModeHandler
 from slack_bolt.app.async_app import AsyncApp
 
 app = AsyncApp(token=os.environ["SLACK_BOT_TOKEN"])
-
+MERAKI_LOG_PATH = f'{os.path.dirname(os.path.realpath(__file__))}/../logs_meraki/'
 
 async def chunks(lst, n):
     chunked_lst = []
@@ -18,7 +19,7 @@ async def chunks(lst, n):
         chunked_lst.append(lst[i:i + n])
     return chunked_lst
 
-@app.message('hello')
+@app.message(re.compile("(hi|hello|hey)"))
 async def say_hello(ack, say, logger):
     logger.info("Hey there")
     await ack()
@@ -41,12 +42,12 @@ async def submission(ack):
 
 
 # export SLACK_APP_TOKEN=xapp-***
-# export SLACK_BOT_TOKEN=xoxb-***
+# export SLACK_BOT_TOKEN=xoxb-*** 
 
 @app.message("ping")
 async def ping(ack, say):
     await ack()
-    await say("pong")
+    await say("Pong :ok_hand:")
 
 @app.command("/meraki-orgs")
 async def cmd_organizations(ack, say, command, client, logger):
@@ -73,7 +74,7 @@ async def cmd_organizations(ack, say, command, client, logger):
         text="Connecting to Meraki Dashboard API...")
     
     try:
-        async with meraki.aio.AsyncDashboardAPI(os.environ.get('MERAKI_DASHBOARD_API_KEY'), log_path='./log_meraki') as dashboard:
+        async with meraki.aio.AsyncDashboardAPI(os.environ.get('MERAKI_DASHBOARD_API_KEY'), log_path=MERAKI_LOG_PATH) as dashboard:
             organizations = await dashboard.organizations.getOrganizations()
     except Exception as e:
         await client.chat_update(
@@ -351,6 +352,6 @@ async def main():
 
 
 if __name__ == "__main__":
-    if not os.path.isdir('./log_meraki'):
-        os.mkdir('./log_meraki')
+    if not os.path.isdir(MERAKI_LOG_PATH):
+        os.mkdir(MERAKI_LOG_PATH)
     asyncio.run(main())
