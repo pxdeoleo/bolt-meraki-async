@@ -37,7 +37,7 @@ jobs:
         uses: cross-the-world/ssh-pipeline@v1.2.0
         
         with:
-          host: ${{ secrets.ECS_IP }}
+          host: ${{ secrets.ECS_HOST }}
           user: ${{ secrets.ECS_USER }}
           pass: ${{ secrets.ECS_PASSWORD }}
           script: |
@@ -48,7 +48,7 @@ jobs:
       - name: Run container in Huawei ECS
         uses: cross-the-world/ssh-pipeline@v1.2.0
         with:
-          host: ${{ secrets.ECS_IP }}
+          host: ${{ secrets.ECS_HOST }}
           user: ${{ secrets.ECS_USER }}
           pass: ${{ secrets.ECS_PASSWORD }}
           script: |
