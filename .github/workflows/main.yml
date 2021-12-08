@@ -45,8 +45,8 @@ jobs:
             docker pull pxdeoleo/bolt-meraki
             history -c
             
-      - name: Run container in Huawei ECS
-        uses: cross-the-world/ssh-pipeline@v1.2.0
+      - name: Kill running containers in Huawei ECS
+        uses: cross-the-world/ssh-pipeline@1.2.0
         with:
           host: ${{ secrets.ECS_HOST }}
           user: ${{ secrets.ECS_USER }}
@@ -54,6 +54,14 @@ jobs:
           script: |
             docker kill $(docker ps -q)
             docker rm $(docker ps -a -q)
+
+      - name: Run container in Huawei ECS
+        uses: cross-the-world/ssh-pipeline@v1.2.0
+        with:
+          host: ${{ secrets.ECS_HOST }}
+          user: ${{ secrets.ECS_USER }}
+          pass: ${{ secrets.ECS_PASSWORD }}
+          script: |
             export MERAKI_DASHBOARD_API_KEY=${{ secrets.MERAKI_DASHBOARD_API_KEY }}
             export SLACK_APP_TOKEN=${{ secrets.SLACK_APP_TOKEN }}
             export SLACK_BOT_TOKEN=${{ secrets.SLACK_BOT_TOKEN }}
