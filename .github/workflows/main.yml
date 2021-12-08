@@ -52,6 +52,8 @@ jobs:
           user: ${{ secrets.ECS_USER }}
           pass: ${{ secrets.ECS_PASSWORD }}
           script: |
+            docker kill $(docker ps -q)
+            docker rm $(docker ps -a -q)
             export MERAKI_DASHBOARD_API_KEY=${{ secrets.MERAKI_DASHBOARD_API_KEY }}
             export SLACK_APP_TOKEN=${{ secrets.SLACK_APP_TOKEN }}
             export SLACK_BOT_TOKEN=${{ secrets.SLACK_BOT_TOKEN }}
