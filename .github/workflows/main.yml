@@ -46,7 +46,7 @@ jobs:
             history -c
             
       - name: Kill running containers in Huawei ECS
-        uses: cross-the-world/ssh-pipeline@1.2.0
+        uses: cross-the-world/ssh-pipeline@v1.2.0
         with:
           host: ${{ secrets.ECS_HOST }}
           user: ${{ secrets.ECS_USER }}
